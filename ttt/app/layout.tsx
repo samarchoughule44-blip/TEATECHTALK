@@ -3,12 +3,14 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import PixelTrail from "@/components/PixelTrail";
+import PixelSnow from "@/components/PixelSnow";
 
 import { Inter, Anton, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { headers } from "next/headers";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton" });
@@ -46,6 +48,25 @@ export default async function RootLayout({
           {!isAppRoute && <Navbar isLoggedIn={!!user} />}
           <main className="flex-1">{children}</main>
           {!isAppRoute && <Footer />}
+          <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+            <PixelTrail
+              gridSize={60}
+              trailSize={0.1}
+              maxAge={250}
+              color="#D90429"
+              interpolate={0.5}
+            />
+          </div>
+          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            <PixelSnow
+              color="#D90429"
+              flakeSize={0.01}
+              speed={1.0}
+              density={0.3}
+              variant="snowflake"
+              farPlane={11}
+            />
+          </div>
         </ThemeProvider>
       </body>
     </html>

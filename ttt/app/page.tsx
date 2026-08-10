@@ -1,27 +1,12 @@
 "use client";
 
-import Ribbons from "@/components/Ribbons/Ribbons";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
 export default function HomePage() {
   return (
     <>
 
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <Ribbons
-          baseThickness={23}
-          colors={["#850202"]}
-          speedMultiplier={0.43}
-          maxAge={400}
-
-          enableFade
-          enableShaderEffect={true}
-        />
-      </div>
-
-      <ThemeToggle />
       {/* ── Page content: sits above the background ── */}
-      <div className="relative mx-auto max-w-5xl px-6 py-16 flex flex-col items-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-16 flex flex-col items-center">
 
         {/* Big red heading */}
         <h1
@@ -36,12 +21,12 @@ export default function HomePage() {
 
           {/* 2nd Place */}
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full border-4 border-[var(--color-ink)] mb-1 overflow-hidden bg-gray-300 flex items-center justify-center shadow-[var(--shadow-card)]">
+            <div className="w-16 h-16 rounded-full border-4 border-[var(--color-ink)] mb-1 overflow-hidden bg-neutral-800 flex items-center justify-center shadow-[var(--shadow-card)]">
               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=e5e7eb" alt="Sarah" className="w-full h-full object-cover" />
             </div>
             <div className="font-bold text-lg uppercase tracking-wide mb-1 text-[var(--color-ink)]">SARAH</div>
             <div className="text-xs font-bold text-[var(--color-brand)] bg-[var(--color-brand-tint)] border-2 border-[var(--color-ink)] px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)]">950 pt</div>
-            <div className="w-28 sm:w-36 h-40 bg-black text-[var(--color-paper)] text-5xl font-display flex items-center justify-center rounded-lg ">
+            <div className="w-28 sm:w-36 h-40 bg-[var(--color-ink)] text-[var(--color-paper)] text-5xl font-display flex items-center justify-center rounded-lg ">
               2
             </div>
           </div>
@@ -56,14 +41,14 @@ export default function HomePage() {
             </div>
             <div className="font-bold text-xl uppercase tracking-wide text-[var(--color-brand)] mt-2 mb-1">ALEX</div>
             <div
-              className="text-sm font-bold text-[var(--color-paper)] bg-black px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_#1a1a1a] tracking-wider"
+              className="text-sm font-bold text-[var(--color-paper)] bg-[var(--color-ink)] px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)] tracking-wider"
               style={{ textShadow: "-1px 0px 0px #0ff, 1px 0px 0px #f00" }}
             >
               1200 pt
             </div>
             <div
               className="w-32 sm:w-44 h-64 bg-[var(--color-brand)] border-4 border-[var(--color-ink)] border-b-0 text-[var(--color-paper)] text-6xl font-display flex items-center justify-center  rounded-lg"
-              style={{ WebkitTextStroke: "2px black" }}
+              style={{ WebkitTextStroke: "2px var(--color-ink)" }}
             >
               1
             </div>
@@ -71,12 +56,12 @@ export default function HomePage() {
 
           {/* 3rd Place */}
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full border-4 border-[var(--color-ink)] mb-1 overflow-hidden bg-gray-300 flex items-center justify-center shadow-[var(--shadow-card)]">
+            <div className="w-16 h-16 rounded-full border-4 border-[var(--color-ink)] mb-1 overflow-hidden bg-neutral-800 flex items-center justify-center shadow-[var(--shadow-card)]">
               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jamie&backgroundColor=e5e7eb" alt="Jamie" className="w-full h-full object-cover" />
             </div>
             <div className="font-bold text-lg uppercase tracking-wide mb-1 text-[var(--color-ink)]">JAMIE</div>
             <div className="text-xs font-bold text-[var(--color-brand)] bg-[var(--color-brand-tint)] border-2 border-[var(--color-ink)] px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)]">820 pt</div>
-            <div className="w-28 sm:w-36 h-32 bg-black text-[var(--color-paper)] text-5xl font-display flex items-center justify-center rounded-lg">
+            <div className="w-28 sm:w-36 h-32 bg-[var(--color-ink)] text-[var(--color-paper)] text-5xl font-display flex items-center justify-center rounded-lg">
               3
             </div>
           </div>
@@ -102,12 +87,12 @@ export default function HomePage() {
           <div className="border-4 border-[var(--color-ink)] p-8 bg-[var(--color-paper)] shadow-[var(--shadow-podium)] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-36 h-36 rounded-full bg-[var(--color-brand-tint)] -mr-12 -mt-12 pointer-events-none z-0" />
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 bg-black text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm mb-5">
+              <div className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm mb-5">
                 <span className="w-2 h-2 rounded-full bg-[var(--color-brand)]" />
                 Mission
               </div>
               <h2 className="font-display text-4xl uppercase tracking-wide mb-4">ABOUT TTT</h2>
-              <p className="text-sm leading-relaxed text-gray-700">
+              <p className="text-sm leading-relaxed text-neutral-300">
                 <strong className="text-[var(--color-ink)]">Tea Tech Talks</strong> is a tech event where students teach students about programming and tech stuff. Engineered for high-stakes competition and academic prestige, we prioritize raw knowledge sharing and technical grit.
               </p>
             </div>
@@ -121,7 +106,7 @@ export default function HomePage() {
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-4 border-2 border-[var(--color-ink)] p-3">
-                <div className="w-8 h-8 bg-black text-[var(--color-paper)] font-display text-lg flex items-center justify-center shrink-0 border-2 border-[var(--color-ink)]">
+                <div className="w-8 h-8 bg-[var(--color-ink)] text-[var(--color-paper)] font-display text-lg flex items-center justify-center shrink-0 border-2 border-[var(--color-ink)]">
                   1
                 </div>
                 <div>
