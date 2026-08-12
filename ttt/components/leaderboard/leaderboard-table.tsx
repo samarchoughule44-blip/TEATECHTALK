@@ -7,6 +7,7 @@ import { leaderboardData } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+
 type Timeframe = "weekly" | "monthly" | "overall";
 
 const TABS: { key: Timeframe; label: string }[] = [

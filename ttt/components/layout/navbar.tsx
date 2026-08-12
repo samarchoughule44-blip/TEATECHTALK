@@ -34,7 +34,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
                   "rounded-full px-4 py-1.5 text-[11px] font-black uppercase tracking-widest transition-colors",
                   active
                     ? "bg-[var(--color-brand)] text-[#fff]"
-                    : "text-black hover:bg-gray-100"
+                    : "text-black hover:bg-[#D90429]"
                 )}
               >
                 {link.label}
@@ -48,7 +48,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
                 "rounded-full px-4 py-1.5 text-[11px] font-black uppercase tracking-widest transition-colors",
                 pathname === "/profile"
                   ? "bg-[var(--color-brand)] text-[#fff]"
-                  : "text-black hover:bg-gray-100"
+                  : "text-black hover:bg-[#D90429]"
               )}
             >
               Profile
@@ -77,13 +77,13 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             <>
               <Link
                 href="/login"
-                className="hidden sm:inline-flex border-2 border-black text-black font-black uppercase tracking-widest text-[11px] px-4 py-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                className="hidden sm:inline-flex border-2 border-black text-black font-black uppercase tracking-widest text-[11px] px-4 py-1.5 rounded-full hover:bg-[#D90429] transition-colors"
               >
                 LOGIN
               </Link>
               <Link
                 href="/signup"
-                className="bg-black text-white font-black uppercase tracking-widest text-[11px] px-4 py-1.5 rounded-full border-2 border-black hover:bg-black transition-colors"
+                className="bg-black text-white font-black uppercase tracking-widest text-[11px] px-4 py-1.5 rounded-full border-2 border-black hover:bg-[#D90429] transition-colors"
               >
                 SIGNUP
               </Link>

@@ -25,7 +25,7 @@ export default function LoginPage() {
             </div>
           )}
           <div>
-            <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5" htmlFor="email">
+            <label className="block text-xs font-bold text-[#D90429] uppercase tracking-wider mb-1.5" htmlFor="email">
               Email Address
             </label>
             <input
@@ -34,12 +34,12 @@ export default function LoginPage() {
               id="email"
               required
               placeholder="Enter your email"
-              className="w-full h-12 border border-gray-300 rounded-lg px-4 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+              className="w-full h-12 border border-gray-300 rounded-lg px-4 text-sm text-[#D90429] placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5" htmlFor="password">
+            <label className="block text-xs font-bold text-[#D90429] uppercase tracking-wider mb-1.5" htmlFor="password">
               Password
             </label>
             <input
@@ -48,7 +48,7 @@ export default function LoginPage() {
               id="password"
               required
               placeholder="Enter your password"
-              className="w-full h-12 border border-gray-300 rounded-lg px-4 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+              className="w-full h-12 border border-gray-300 rounded-lg px-4 text-sm text-[#D90429] placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
             />
             <div className="flex justify-end mt-2">
               <Link
