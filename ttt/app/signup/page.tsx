@@ -14,7 +14,7 @@ export default function SignupPage() {
       <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 p-10 shadow-[0_8px_40px_rgba(0,0,0,0.14)]">
 
         {/* Heading */}
-        <h1 className="text-center text-4xl font-black tracking-tight text-black mb-1">SIGN UP</h1>
+        <h1 className="text-center text-4xl font-black tracking-tight text-[#D90429]  mb-1">SIGN UP</h1>
         <p className="text-center text-sm text-gray-500 font-medium mb-8">
           Join the leaderboard today.
         </p>
@@ -26,7 +26,7 @@ export default function SignupPage() {
               {state.error}
             </div>
           )}
-          
+
           <div>
             <label className="block text-xs font-bold text-black uppercase tracking-wider mb-1.5" htmlFor="name">
               Full Name
@@ -37,7 +37,7 @@ export default function SignupPage() {
               id="name"
               required
               placeholder="Enter your full name"
-              className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+              className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429] placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
             />
           </div>
 
@@ -54,7 +54,7 @@ export default function SignupPage() {
                 min="10"
                 max="100"
                 placeholder="Age"
-                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429]  placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
               />
             </div>
             <div>
@@ -67,7 +67,7 @@ export default function SignupPage() {
                 id="roll_no"
                 required
                 placeholder="Roll number"
-                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429]  placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
               />
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function SignupPage() {
                 id="class_name"
                 required
                 placeholder="e.g. FYBSc"
-                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429]  placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
               />
             </div>
             <div>
@@ -96,7 +96,7 @@ export default function SignupPage() {
                 id="div"
                 required
                 placeholder="e.g. A"
-                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429]  placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function SignupPage() {
               id="email"
               required
               placeholder="Enter your email"
-              className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+              className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429]  placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
             />
           </div>
 
@@ -126,7 +126,7 @@ export default function SignupPage() {
                 id="password"
                 required
                 placeholder="Create a password"
-                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all pr-10"
+                className="w-full h-10 border border-gray-300 rounded-lg px-3 text-sm text-[#D90429]  placeholder:text-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all pr-10"
               />
               <button
                 type="button"

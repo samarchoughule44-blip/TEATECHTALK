@@ -69,7 +69,7 @@ export default async function CompletedPage({ params }: Props) {
 
           {/* Breakdown */}
           <div className="p-5">
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
               {/* Typing score */}
               <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-left">
                 <p className="text-xs text-gray-500 mb-2 font-bold uppercase tracking-wider">⌨️ Typing Test</p>
@@ -129,9 +129,9 @@ export default async function CompletedPage({ params }: Props) {
         </div>
 
         {/* CTA */}
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Link
-            href={`/room/${roomCode}/leaderboard`}
+            href="/leaderboard"
             className="flex-1 bg-[#D90429] hover:bg-[#b00322] text-white font-bold py-3 rounded-xl transition-colors text-sm text-center"
           >
             🏆 View Leaderboard

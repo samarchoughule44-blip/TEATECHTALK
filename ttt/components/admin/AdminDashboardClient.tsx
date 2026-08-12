@@ -68,10 +68,13 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState<Date | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
 
   // Update clock
   useEffect(() => {
+    setIsMounted(true)
+    setCurrentTime(new Date())
     const t = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(t)
   }, [])
@@ -165,11 +168,11 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
   }
 
   const room = selectedRoom
-  const total = room?.participants.length ?? 0
-  const completed = room?.participants.filter(p => p.status === 'COMPLETED').length ?? 0
-  const inProgress = room?.participants.filter(p => ['TYPING', 'TYPING_DONE', 'QUIZ'].includes(p.status)).length ?? 0
-  const waiting = room?.participants.filter(p => p.status === 'JOINED').length ?? 0
-  const left = room?.participants.filter(p => ['LEFT', 'DISCONNECTED'].includes(p.status)).length ?? 0
+  const total = room?.participants?.length ?? 0
+  const completed = room?.participants?.filter(p => p.status === 'COMPLETED').length ?? 0
+  const inProgress = room?.participants?.filter(p => ['TYPING', 'TYPING_DONE', 'QUIZ'].includes(p.status)).length ?? 0
+  const waiting = room?.participants?.filter(p => p.status === 'JOINED').length ?? 0
+  const left = room?.participants?.filter(p => ['LEFT', 'DISCONNECTED'].includes(p.status)).length ?? 0
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans">
@@ -185,9 +188,13 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="text-right hidden sm:block">
-            <div className="text-xs text-gray-400">{currentTime.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
-            <div className="text-sm font-mono font-bold text-white">{currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+          <div className="text-right hidden sm:block w-[120px]">
+            {isMounted && currentTime ? (
+              <>
+                <div className="text-xs text-gray-400">{currentTime.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+                <div className="text-sm font-mono font-bold text-white">{currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+              </>
+            ) : null}
           </div>
           <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 border border-white/10">
             <div className="w-6 h-6 rounded-full bg-[#D90429] flex items-center justify-center text-white text-xs font-bold">

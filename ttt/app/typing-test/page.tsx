@@ -81,7 +81,7 @@ export default function TypingTestPage() {
       setUserName(user.user_metadata?.name?.split(" ")[0] ?? "Typist");
       initPassage(user.id);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function initPassage(uid: string) {
@@ -279,9 +279,8 @@ export default function TypingTestPage() {
                 {stat.label}
               </p>
               <p
-                className={`text-3xl font-black tabular-nums ${
-                  stat.red ? "text-[var(--color-brand)]" : "text-black"
-                }`}
+                className={`text-3xl font-black tabular-nums ${stat.red ? "text-[var(--color-brand)]" : "text-black"
+                  }`}
               >
                 {stat.value}
               </p>

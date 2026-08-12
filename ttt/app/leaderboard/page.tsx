@@ -1,166 +1,228 @@
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+
 export const metadata = {
   title: "Leaderboard | Tea Tech Talks",
 };
 
-const top3 = [
-  {
-    rank: 2,
-    name: "J. Doe",
-    pts: "8,450 pts",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=JDoe&backgroundColor=b6e3f4",
-  },
-  {
-    rank: 1,
-    name: "A. Smith",
-    pts: "10,200 pts",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ASmith&backgroundColor=ffd5dc",
-  },
-  {
-    rank: 3,
-    name: "M. Lee",
-    pts: "7,900 pts",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=MLee&backgroundColor=c0aede",
-  },
-];
+export const revalidate = 30;
 
-const rows = [
-  { rank: 4, name: "Sam River", initials: "SR", score: "6,500", badge: null, highlight: false },
-  { rank: 5, name: "Taylor Kim", initials: "TK", score: "6,250", badge: null, highlight: false },
-  { rank: 6, name: "Casey Jones", initials: "CJ", score: "5,800", badge: "TRENDING", highlight: false },
-  { rank: 7, name: "Alex Li", initials: "AL", score: "5,100", badge: null, highlight: false },
+const MEDALS = ["🥇", "🥈", "🥉"];
+const MEDAL_COLORS = [
+  "border-yellow-400 bg-yellow-400/10",
+  "border-gray-300 bg-gray-300/10",
+  "border-amber-600 bg-amber-600/10",
 ];
+const PODIUM_HEIGHTS = ["h-36", "h-52", "h-24"];
+const PODIUM_SIZES = ["w-16 h-16", "w-24 h-24", "w-16 h-16"];
 
-export default function LeaderboardPage() {
+async function getLeaderboardData() {
+  // Aggregate best final score per participant (across all rooms)
+  const allFinalResults = await prisma.roomFinalResult.findMany({
+    include: {
+      participant: {
+        select: { name: true, participantCode: true },
+      },
+    },
+    orderBy: { finalScore: "desc" },
+  });
+
+  // Group by participantCode — pick highest score per person
+  const byCode = new Map<string, {
+    name: string;
+    participantCode: string;
+    bestScore: number;
+    totalScore: number;
+    roomCount: number;
+    bestTypingScore: number;
+    bestQuizScore: number;
+  }>();
+
+  for (const r of allFinalResults) {
+    const code = r.participant.participantCode;
+    const existing = byCode.get(code);
+    if (!existing) {
+      byCode.set(code, {
+        name: r.participant.name,
+        participantCode: code,
+        bestScore: r.finalScore,
+        totalScore: r.finalScore,
+        roomCount: 1,
+        bestTypingScore: r.typingScore,
+        bestQuizScore: r.quizScore,
+      });
+    } else {
+      existing.totalScore += r.finalScore;
+      existing.roomCount += 1;
+      if (r.finalScore > existing.bestScore) {
+        existing.bestScore = r.finalScore;
+        existing.bestTypingScore = r.typingScore;
+        existing.bestQuizScore = r.quizScore;
+      }
+      byCode.set(code, existing);
+    }
+  }
+
+  // Sort by best score descending
+  const sorted = Array.from(byCode.values())
+    .sort((a, b) => b.bestScore - a.bestScore || a.name.localeCompare(b.name))
+    .map((u, i) => ({
+      ...u,
+      rank: i + 1,
+      initials: u.name
+        .split(" ")
+        .map((w) => w[0] ?? "")
+        .join("")
+        .slice(0, 2)
+        .toUpperCase(),
+    }));
+
+  return sorted;
+}
+
+export default async function LeaderboardPage() {
+  let leaderboard: Awaited<ReturnType<typeof getLeaderboardData>> = [];
+  try {
+    leaderboard = await getLeaderboardData();
+  } catch (err) {
+    console.error("Leaderboard fetch error:", err);
+  }
+
+  const top3 = leaderboard.slice(0, 3);
+  // Podium order: 2nd, 1st, 3rd
+  const podiumOrder = [top3[1], top3[0], top3[2]].filter(Boolean);
+  const rest = leaderboard.slice(3);
+
   return (
     <div className="min-h-screen bg-[var(--color-paper)] text-[var(--color-ink)]">
       <div className="mx-auto max-w-2xl px-4 py-12 flex flex-col items-center">
 
-        {/* ── Giant heading ── */}
+        {/* ── Heading ── */}
         <h1
-          className="text-[3.5rem] sm:text-[6.5rem] leading-none text-[var(--color-brand)] uppercase text-center mb-10 w-full"
+          className="text-[3.5rem] sm:text-[6.5rem] leading-none text-[var(--color-brand)] uppercase text-center mb-4 w-full"
           style={{ fontFamily: "var(--font-anton), Anton, Impact, sans-serif", letterSpacing: "0.02em" }}
         >
           LEADERBOARD
         </h1>
+        <p className="text-gray-500 text-sm font-medium mb-10 uppercase tracking-widest">
+          Ranked by best room activity score
+        </p>
 
-        {/* ── Search bar ── */}
-        <div className="w-full max-w-md relative mb-10 border-5 ">
-          <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-muted)] pointer-events-none"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Search participants..."
-            className="w-full h-11 pl-11 pr-4 bg-[var(--color-paper)] text-[var(--color-ink)] text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[var(--color-brand)] border border-[var(--color-line)]"
-          />
-        </div>
-
-        {/* ── Podium ── */}
-        {/* Podium */}
-        <div className="flex items-end justify-center gap-6 sm:gap-8 mb-0 w-full relative z-10">
-
-          {/* 2nd Place */}
-          <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full border-4 border-black mb-1 overflow-hidden bg-gray-300 flex items-center justify-center shadow-[4px_4px_0px_0px_var(--color-ink)]">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=e5e7eb" alt="Sarah" className="w-full h-full object-cover" />
-            </div>
-            <div className="font-bold text-lg uppercase tracking-wide mb-1 text-[var(--color-ink)]">SARAH</div>
-            <div className="text-xs font-bold text-[var(--color-brand)] dark:text-[#fff] bg-[var(--color-brand-tint)] border-2 border-[var(--color-ink)] px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)]">950 pt</div>
-            <div className="w-28 sm:w-36 h-40 bg-[var(--color-ink)] text-[var(--color-paper)] text-5xl font-display flex items-center justify-center rounded-t-lg">
-              2
-            </div>
-          </div>
-
-          {/* 1st Place */}
-          <div className="flex flex-col items-center relative z-20">
-            <div className="w-8 h-8 bg-[var(--color-brand)] border-2 border-[var(--color-ink)] rounded-full flex items-center justify-center text-[#fff] text-base absolute -top-4 z-10 shadow-sm">
-              ★
-            </div>
-            <div className="w-24 h-24 rounded-full border-4 border-[var(--color-brand)] mb-1 overflow-hidden bg-[var(--color-paper)] flex items-center justify-center shadow-[6px_6px_0px_0px_var(--color-ink)] relative">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=ffffff" alt="Alex" className="w-full h-full object-cover" />
-            </div>
-            <div className="font-bold text-xl uppercase tracking-wide text-[var(--color-brand)] mt-2 mb-1">ALEX</div>
-            <div
-              className="text-sm font-bold text-[var(--color-paper)] bg-[var(--color-ink)] px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)] tracking-wider"
+        {leaderboard.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="text-6xl mb-4">🏆</div>
+            <p className="text-2xl font-black uppercase tracking-widest text-gray-400 mb-3">No Results Yet</p>
+            <p className="text-gray-500 font-medium">Complete an activity room to appear on the leaderboard.</p>
+            <Link
+              href="/join"
+              className="mt-6 inline-block bg-[var(--color-brand)] text-white font-black uppercase tracking-widest text-sm py-3 px-8 rounded-md hover:bg-[var(--color-brand-dark)] transition-colors"
             >
-              1200 pt
-            </div>
-            <div
-              className="w-32 sm:w-44 h-64 bg-[var(--color-brand)] border-4 border-[var(--color-ink)] text-[#fff] text-6xl font-display flex items-center justify-center rounded-t-lg"
-              style={{ WebkitTextStroke: "2px var(--color-ink)" }}
-            >
-              1
-            </div>
+              Join Activity Room →
+            </Link>
           </div>
-
-          {/* 3rd Place */}
-          <div className="flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full border-4 border-black mb-1 overflow-hidden bg-gray-300 flex items-center justify-center shadow-[4px_4px_0px_0px_var(--color-ink)]">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jamie&backgroundColor=e5e7eb" alt="Jamie" className="w-full h-full object-cover" />
-            </div>
-            <div className="font-bold text-lg uppercase tracking-wide mb-1 text-[var(--color-ink)]">JAMIE</div>
-            <div className="text-xs font-bold text-[var(--color-brand)] dark:text-[#fff] bg-[var(--color-brand-tint)] border-2 border-[var(--color-ink)] px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)]">820 pt</div>
-            <div className="w-28 sm:w-36 h-32 bg-[var(--color-ink)] text-[var(--color-paper)] text-5xl font-display flex items-center justify-center rounded-t-lg">
-              3
-            </div>
-          </div>
-        </div>
-
-        {/* Base bar */}
-        <div className="w-full max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-0"></div>
-
-        {/* ── Leaderboard table ── */}
-        <div className="w-full bg-[var(--color-paper)] border border-[var(--color-line)] rounded-[28px] overflow-hidden shadow-sm">
-
-          {/* Table header */}
-          <div className="flex justify-between items-center px-5 py-3 border-b border-[var(--color-line)] bg-[var(--color-fog)]">
-            <div className="flex gap-6">
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Rank</span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Participant</span>
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Score</span>
-          </div>
-
-          {/* Rows */}
-          {rows.map((user) => (
-            <div
-              key={user.rank}
-              className={`flex justify-between items-center px-5 py-4 border-b border-[var(--color-line)] last:border-b-0 transition-colors ${user.highlight ? "bg-[var(--color-brand-tint)]" : "hover:bg-[var(--color-fog)]"
-                }`}
-            >
-              <div className="flex items-center gap-5">
-                <span className="font-black text-base text-[var(--color-ink)] w-5 shrink-0">{user.rank}</span>
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shrink-0 border-2 ${user.highlight
-                      ? "bg-[var(--color-brand)] border-[var(--color-brand)] text-[#fff]"
-                      : "bg-[var(--color-mist)] border-[var(--color-line)] text-[var(--color-ink)]"
-                      }`}
-                  >
-                    {user.initials}
-                  </div>
-                  <span className="font-bold text-sm text-[var(--color-ink)]">{user.name}</span>
-                  {user.badge && (
-                    <span className="bg-[var(--color-ink)] text-[var(--color-paper)] text-[9px] font-black px-2 py-0.5 uppercase tracking-widest border border-[var(--color-ink)]">
-                      {user.badge}
-                    </span>
-                  )}
-                </div>
+        ) : (
+          <>
+            {/* ── Podium ── */}
+            {top3.length > 0 && (
+              <div className="flex items-end justify-center gap-6 sm:gap-8 mb-0 w-full relative z-10">
+                {podiumOrder.map((user, podiumIdx) => {
+                  const actualRank = podiumIdx === 0 ? 2 : podiumIdx === 1 ? 1 : 3;
+                  return (
+                    <div key={user.participantCode} className="flex flex-col items-center">
+                      {/* Crown for 1st */}
+                      {podiumIdx === 1 && (
+                        <div className="w-8 h-8 bg-[var(--color-brand)] border-2 border-[var(--color-ink)] rounded-full flex items-center justify-center text-[#fff] text-base absolute z-10 -mt-5 shadow-sm">
+                          ★
+                        </div>
+                      )}
+                      {/* Avatar */}
+                      <div className={`${PODIUM_SIZES[podiumIdx]} rounded-full border-4 ${MEDAL_COLORS[actualRank - 1]} mb-1 flex items-center justify-center shadow-[4px_4px_0px_0px_var(--color-ink)] mt-2`}>
+                        <span className={`font-black text-[var(--color-ink)] ${podiumIdx === 1 ? "text-2xl" : "text-lg"}`}>
+                          {user.initials}
+                        </span>
+                      </div>
+                      <div className={`font-bold uppercase tracking-wide mb-1 text-[var(--color-ink)] ${podiumIdx === 1 ? "text-xl" : "text-lg"}`}>
+                        {user.name.split(" ")[0].toUpperCase()}
+                      </div>
+                      <div className={`text-xs font-bold px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)] border-2 border-[var(--color-ink)] ${
+                        podiumIdx === 1
+                          ? "text-[var(--color-paper)] bg-[var(--color-ink)] tracking-wider text-sm"
+                          : "text-[var(--color-brand)] bg-[var(--color-brand-tint)]"
+                      }`}>
+                        {user.bestScore.toFixed(1)} pts
+                      </div>
+                      <div
+                        className={`w-28 sm:w-36 ${PODIUM_HEIGHTS[podiumIdx]} flex items-center justify-center rounded-t-lg ${
+                          podiumIdx === 1
+                            ? "bg-[var(--color-brand)] border-4 border-[var(--color-ink)] text-[#fff]"
+                            : "bg-[var(--color-ink)] text-[var(--color-paper)]"
+                        } text-5xl font-display`}
+                        style={podiumIdx === 1 ? { WebkitTextStroke: "2px var(--color-ink)" } : {}}
+                      >
+                        {actualRank}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <span className="font-black text-sm text-[var(--color-brand)]">{user.score}</span>
+            )}
+
+            {/* Base bar */}
+            <div className="w-full max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-0" />
+
+            {/* ── Full Table ── */}
+            <div className="w-full bg-[var(--color-paper)] border border-[var(--color-line)] rounded-[28px] overflow-hidden shadow-sm">
+
+              {/* Table header */}
+              <div className="grid grid-cols-12 px-5 py-3 border-b border-[var(--color-line)] bg-[var(--color-fog)]">
+                <span className="col-span-1 text-[10px] font-black uppercase tracking-widest text-gray-500">Rank</span>
+                <span className="col-span-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Participant</span>
+                <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">Typing</span>
+                <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">Quiz</span>
+                <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-500 text-right">Best</span>
+              </div>
+
+              {leaderboard.map((user, i) => (
+                <div
+                  key={user.participantCode}
+                  className={`grid grid-cols-12 items-center px-5 py-4 border-b border-[var(--color-line)] last:border-b-0 transition-colors ${
+                    i < 3 ? "bg-[var(--color-brand-tint)]" : "hover:bg-[var(--color-fog)]"
+                  }`}
+                >
+                  <span className="col-span-1 font-black text-base text-[var(--color-ink)]">
+                    {i < 3 ? MEDALS[i] : `#${i + 1}`}
+                  </span>
+                  <div className="col-span-5 flex items-center gap-3">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shrink-0 border-2 ${
+                      i < 3
+                        ? "bg-[var(--color-brand)] border-[var(--color-brand)] text-[#fff]"
+                        : "bg-[var(--color-mist)] border-[var(--color-line)] text-[var(--color-ink)]"
+                    }`}>
+                      {user.initials}
+                    </div>
+                    <div>
+                      <span className="font-bold text-sm text-[var(--color-ink)] block">{user.name}</span>
+                      <span className="text-[11px] text-gray-400 font-mono">{user.participantCode}</span>
+                    </div>
+                  </div>
+                  <span className="col-span-2 text-center font-semibold text-sm text-[var(--color-ink)]">
+                    {user.bestTypingScore.toFixed(1)}
+                  </span>
+                  <span className="col-span-2 text-center font-semibold text-sm text-[var(--color-ink)]">
+                    {user.bestQuizScore.toFixed(1)}
+                  </span>
+                  <span className="col-span-2 text-right font-black text-sm text-[var(--color-brand)]">
+                    {user.bestScore.toFixed(1)}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
 
-          {/* Load more */}
-          <button className="w-full py-4 text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 hover:text-[var(--color-ink)] bg-[var(--color-paper)] hover:bg-[var(--color-fog)] transition-colors border-t border-[var(--color-line)]">
-            Load More...
-          </button>
-        </div>
-
+            <p className="text-xs text-gray-500 mt-6 text-center">
+              {leaderboard.length} participants · Scores update in real-time
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

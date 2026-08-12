@@ -30,7 +30,7 @@ function JoinForm() {
         <div className="bg-[#141414] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
           {/* Header */}
           <div className="px-6 pt-7 pb-5 border-b border-white/10">
-            <h1 className="text-2xl font-black text-white mb-1">Join Activity Room</h1>
+            <h1 className="text-2xl font-black text-[#D90429]  mb-1">Join Activity Room</h1>
             <p className="text-sm text-gray-500">Enter your details and the Room ID to get started.</p>
           </div>
 
@@ -58,7 +58,7 @@ function JoinForm() {
                 maxLength={80}
                 placeholder="e.g. Samar Khan"
                 autoComplete="name"
-                className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder:text-gray-600 focus:outline-none focus:border-[#D90429]/50 focus:bg-white/[0.07] transition-all duration-200"
+                className="w-full bg-white/5 border border-white/10 text-[#D90429]  rounded-xl px-4 py-3 text-sm placeholder:text-gray-600 focus:outline-none focus:border-[#D90429]/50 focus:bg-white/[0.07] transition-all duration-200"
               />
             </div>
 
@@ -76,7 +76,7 @@ function JoinForm() {
                 maxLength={30}
                 placeholder="e.g. CS2024001"
                 autoComplete="off"
-                className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder:text-gray-600 focus:outline-none focus:border-[#D90429]/50 focus:bg-white/[0.07] transition-all duration-200 font-mono uppercase"
+                className="w-full bg-white/5 border border-white/10 text-[#D90429]  rounded-xl px-4 py-3 text-sm placeholder:text-gray-600 focus:outline-none focus:border-[#D90429]/50 focus:bg-white/[0.07] transition-all duration-200 font-mono uppercase"
               />
               <p className="text-xs text-gray-600 mt-1.5">Use your unique college roll number or assigned ID</p>
             </div>
@@ -95,7 +95,7 @@ function JoinForm() {
                 maxLength={12}
                 placeholder="e.g. TECH2026"
                 autoComplete="off"
-                className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder:text-gray-600 focus:outline-none focus:border-[#D90429]/50 focus:bg-white/[0.07] transition-all duration-200 font-mono uppercase tracking-widest"
+                className="w-full bg-white/5 border border-white/10 text-[#D90429]  rounded-xl px-4 py-3 text-sm placeholder:text-gray-600 focus:outline-none focus:border-[#D90429]/50 focus:bg-white/[0.07] transition-all duration-200 font-mono uppercase tracking-widest"
               />
               <p className="text-xs text-gray-600 mt-1.5">Ask the administrator for the Room ID</p>
             </div>

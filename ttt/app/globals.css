@@ -11,8 +11,8 @@
 
   --color-ink: var(--foreground);
   --color-paper: var(--background);
-  --color-black: var(--foreground);
-  --color-white: var(--background);
+  --color-black: #000;
+  --color-white: #fff;
   --color-fog: var(--muted);
   --color-mist: var(--border);
   --color-line: var(--border);

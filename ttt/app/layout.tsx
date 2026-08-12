@@ -55,6 +55,7 @@ export default async function RootLayout({
               maxAge={250}
               color="#D90429"
               interpolate={0.5}
+              gooeyFilter={undefined}
             />
           </div>
           <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
