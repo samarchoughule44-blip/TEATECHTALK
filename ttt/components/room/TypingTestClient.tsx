@@ -169,16 +169,14 @@ export function TypingTestClient({ roomCode, roomId, participantId, participantN
         {/* Stats bar */}
         <div className="grid grid-cols-4 gap-3 mb-6">
           {/* Timer */}
-          <div className={`bg-white/5 border rounded-xl p-4 text-center col-span-1 ${
-            timeLeft <= 10 ? 'border-red-500/30' : 'border-white/10'
-          }`}>
+          <div className={`bg-white/5 border rounded-xl p-4 text-center col-span-1 ${timeLeft <= 10 ? 'border-red-500/30' : 'border-white/10'
+            }`}>
             <div className={`text-3xl font-black font-mono ${timerColor}`}>{formatTime(timeLeft)}</div>
             <div className="text-xs text-gray-500 mt-1">Time Left</div>
             <div className="mt-2 h-1 rounded-full bg-white/10 overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all duration-1000 ${
-                  timeLeft <= 10 ? 'bg-red-500' : timeLeft <= 20 ? 'bg-amber-500' : 'bg-[#D90429]'
-                }`}
+                className={`h-full rounded-full transition-all duration-1000 ${timeLeft <= 10 ? 'bg-red-500' : timeLeft <= 20 ? 'bg-amber-500' : 'bg-[#D90429]'
+                  }`}
                 style={{ width: `${timerPct}%` }}
               />
             </div>
@@ -219,9 +217,9 @@ export function TypingTestClient({ roomCode, roomId, participantId, participantN
                 key={i}
                 className={
                   charStates[i] === 'correct' ? 'text-emerald-400' :
-                  charStates[i] === 'incorrect' ? 'text-red-400 bg-red-500/20' :
-                  i === input.length ? 'text-white bg-white/20 rounded' :
-                  'text-gray-500'
+                    charStates[i] === 'incorrect' ? 'text-red-400 bg-red-500/20' :
+                      i === input.length ? 'text-white bg-white/20 rounded' :
+                        'text-gray-500'
                 }
               >
                 {char}
@@ -249,7 +247,7 @@ export function TypingTestClient({ roomCode, roomId, participantId, participantN
               }
             }}
             placeholder={started ? '' : 'Click here and start typing...'}
-            className="w-full bg-white/5 border border-white/10 focus:border-[#D90429]/50 text-white rounded-xl px-5 py-4 font-mono text-base focus:outline-none placeholder:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white/5 border border-white/10 focus:border-[#D90429]/50 text-white rounded-xl px-5 py-4 font-mono text-base focus:outline-none placeholder:text-[#D90429] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"

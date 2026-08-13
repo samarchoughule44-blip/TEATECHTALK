@@ -1,0 +1,308 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  COMMITTEE
+  ADMIN
+}
+
+enum ActivityType {
+  TYPING
+  QUIZ
+}
+
+enum ActivityStatus {
+  LIVE
+  UPCOMING
+  CLOSED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String?
+  image         String?
+  googleId      String?   @unique
+  role          Role      @default(STUDENT)
+  department    String?
+  rollNumber    String?
+  year          String?
+  emailVerified DateTime?
+  totalPoints   Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  typingResults TypingResult[]
+  quizResults   QuizResult[]
+  badges        UserBadge[]
+  certificates  Certificate[]
+  notifications Notification[]
+  committeeOf   CommitteeMember?
+
+  @@index([totalPoints])
+}
+
+model Activity {
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  title         String
+  description   String
+  type          ActivityType
+  difficulty    String
+  durationLabel String
+  rewardPoints  Int
+  status        ActivityStatus @default(UPCOMING)
+  createdById   String?
+  createdAt     DateTime       @default(now())
+
+  quizzes       Quiz[]
+  typingResults TypingResult[]
+}
+
+model TypingResult {
+  id                String   @id @default(cuid())
+  userId            String
+  activityId        String
+  durationSeconds   Int
+  wpm               Float
+  accuracy          Float
+  mistakes          Int
+  correctChars      Int
+  incorrectChars    Int
+  completionPercent Float
+  pointsEarned      Int
+  createdAt         DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  activity Activity @relation(fields: [activityId], references: [id])
+
+  @@index([userId])
+}
+
+model Quiz {
+  id         String   @id @default(cuid())
+  activityId String
+  title      String
+  category   String
+  createdAt  DateTime @default(now())
+
+  activity  Activity       @relation(fields: [activityId], references: [id])
+  questions QuizQuestion[]
+  results   QuizResult[]
+}
+
+model QuizQuestion {
+  id            String @id @default(cuid())
+  quizId        String
+  question      String
+  options       Json
+  correctOption Int
+
+  quiz Quiz @relation(fields: [quizId], references: [id])
+}
+
+model QuizResult {
+  id             String   @id @default(cuid())
+  userId         String
+  quizId         String
+  correctAnswers Int
+  wrongAnswers   Int
+  pointsEarned   Int
+  timeTakenSec   Int
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  quiz Quiz @relation(fields: [quizId], references: [id])
+
+  @@index([userId])
+}
+
+model Badge {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String
+  iconUrl     String?
+
+  users UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(cuid())
+  userId   String
+  badgeId  String
+  earnedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  badge Badge @relation(fields: [badgeId], references: [id])
+
+  @@unique([userId, badgeId])
+}
+
+model Certificate {
+  id       String   @id @default(cuid())
+  userId   String
+  title    String
+  fileUrl  String
+  issuedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model CommitteeMember {
+  id       String  @id @default(cuid())
+  userId   String  @unique
+  position String
+  bio      String?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+// ─── Activity Room System ──────────────────────────────────────
+
+enum RoomStatus {
+  WAITING
+  ACTIVE
+  COMPLETED
+  CLOSED
+}
+
+enum ParticipantStatus {
+  JOINED
+  TYPING
+  TYPING_DONE
+  QUIZ
+  COMPLETED
+  LEFT
+  DISCONNECTED
+}
+
+model Room {
+  id             String     @id @default(cuid())
+  roomCode       String     @unique // e.g. TECH2026
+  status         RoomStatus @default(WAITING)
+  allowJoining   Boolean    @default(true)
+  createdById    String? // admin userId
+  typingDuration Int        @default(60) // seconds
+  quizDuration   Int        @default(900) // seconds (15 min)
+  typingWeight   Float      @default(0.5) // score weight
+  quizWeight     Float      @default(0.5) // score weight
+  maxScore       Int        @default(200)
+  createdAt      DateTime   @default(now())
+  startedAt      DateTime?
+  endedAt        DateTime?
+
+  participants  RoomParticipant[]
+  typingResults RoomTypingResult[]
+  quizResults   RoomQuizResult[]
+  finalResults  RoomFinalResult[]
+
+  @@index([roomCode])
+  @@index([status])
+}
+
+model RoomParticipant {
+  id              String            @id @default(cuid())
+  roomId          String
+  name            String
+  participantCode String // college/participant ID
+  status          ParticipantStatus @default(JOINED)
+  sessionToken    String            @unique @default(cuid())
+  joinedAt        DateTime          @default(now())
+  completedAt     DateTime?
+  lastSeenAt      DateTime          @default(now())
+
+  room         Room              @relation(fields: [roomId], references: [id])
+  typingResult RoomTypingResult?
+  quizResult   RoomQuizResult?
+  finalResult  RoomFinalResult?
+
+  @@unique([roomId, participantCode])
+  @@index([roomId])
+  @@index([sessionToken])
+}
+
+model RoomTypingResult {
+  id            String   @id @default(cuid())
+  roomId        String
+  participantId String   @unique
+  wpm           Float
+  accuracy      Float
+  errors        Int
+  correctChars  Int
+  totalChars    Int
+  score         Float
+  completedAt   DateTime @default(now())
+
+  room        Room            @relation(fields: [roomId], references: [id])
+  participant RoomParticipant @relation(fields: [participantId], references: [id])
+
+  @@index([roomId])
+}
+
+model RoomQuizResult {
+  id             String   @id @default(cuid())
+  roomId         String
+  participantId  String   @unique
+  correctAnswers Int
+  wrongAnswers   Int
+  totalQuestions Int
+  score          Float
+  timeTakenSec   Int
+  answers        Json // { questionId: selectedOption }
+  completedAt    DateTime @default(now())
+
+  room        Room            @relation(fields: [roomId], references: [id])
+  participant RoomParticipant @relation(fields: [participantId], references: [id])
+
+  @@index([roomId])
+}
+
+model RoomFinalResult {
+  id            String   @id @default(cuid())
+  roomId        String
+  participantId String   @unique
+  typingScore   Float
+  quizScore     Float
+  finalScore    Float
+  rank          Int?
+  completedAt   DateTime @default(now())
+
+  room        Room            @relation(fields: [roomId], references: [id])
+  participant RoomParticipant @relation(fields: [participantId], references: [id])
+
+  @@index([roomId, finalScore])
+}
+
+model RoomQuizQuestion {
+  id            String   @id @default(cuid())
+  question      String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctOption String // "A", "B", "C", or "D"
+  category      String   @default("General")
+  difficulty    String   @default("medium")
+  createdAt     DateTime @default(now())
+
+  @@index([category])
+}
