@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 
 import { createClient } from "@/lib/supabase/server";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
+import { AuthModalProvider } from "@/components/providers/auth-modal-provider";
 
 export default async function RootLayout({
   children,
@@ -46,31 +47,33 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SmoothScrollProvider>
-            {!isAppRoute && <Navbar isLoggedIn={!!user} />}
-            <main className="flex-1">{children}</main>
-            {!isAppRoute && <Footer />}
-            <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
-              <PixelTrail
-                gridSize={60}
-                trailSize={0.1}
-                maxAge={250}
-                color="#D90429"
-                interpolate={0.5}
-                gooeyFilter={undefined}
-              />
-            </div>
-            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-              <PixelSnow
-                color="#D90429"
-                flakeSize={0.01}
-                speed={1.0}
-                density={0.3}
-                variant="snowflake"
-                farPlane={11}
-              />
-            </div>
-          </SmoothScrollProvider>
+          <AuthModalProvider>
+            <SmoothScrollProvider>
+              {!isAppRoute && <Navbar isLoggedIn={!!user} />}
+              <main className="flex-1">{children}</main>
+              {!isAppRoute && <Footer />}
+              <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+                <PixelTrail
+                  gridSize={60}
+                  trailSize={0.1}
+                  maxAge={250}
+                  color="#D90429"
+                  interpolate={0.5}
+                  gooeyFilter={undefined}
+                />
+              </div>
+              <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                <PixelSnow
+                  color="#D90429"
+                  flakeSize={0.01}
+                  speed={1.0}
+                  density={0.3}
+                  variant="snowflake"
+                  farPlane={11}
+                />
+              </div>
+            </SmoothScrollProvider>
+          </AuthModalProvider>
         </ThemeProvider>
       </body>
     </html>

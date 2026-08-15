@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuthModal } from "@/components/providers/auth-modal-provider";
 import { logout } from "@/app/logout/actions";
 
 const NAV_LINKS = [
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { openModal } = useAuthModal();
 
   return (
     <header className="sticky top-0 z-50 bg-transparent px-4 py-4 relative">
@@ -77,18 +79,20 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="hidden sm:inline-flex border border-white text-white font-black uppercase tracking-widest text-[11px] px-5 py-1.5 rounded-full hover:bg-white/10 transition-colors"
+              <button
+                type="button"
+                onClick={() => openModal("login")}
+                className="hidden sm:inline-flex border border-white text-white font-black uppercase tracking-widest text-[11px] px-5 py-1.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
               >
                 LOGIN
-              </Link>
-              <Link
-                href="/signup"
-                className="hidden sm:inline-flex bg-white text-black font-black uppercase tracking-widest text-[11px] px-5 py-1.5 rounded-full border border-white hover:bg-gray-200 transition-colors"
+              </button>
+              <button
+                type="button"
+                onClick={() => openModal("signup")}
+                className="hidden sm:inline-flex bg-white text-black font-black uppercase tracking-widest text-[11px] px-5 py-1.5 rounded-full border border-white hover:bg-gray-200 transition-colors cursor-pointer"
               >
                 SIGNUP
-              </Link>
+              </button>
             </>
           )}
 
@@ -160,20 +164,26 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             </button>
           ) : (
             <div className="flex flex-col gap-2">
-              <Link
-                href="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="border border-white text-white font-black uppercase tracking-widest text-[11px] px-5 py-3 rounded-xl hover:bg-white/10 transition-colors text-center"
+              <button
+                type="button"
+                onClick={() => {
+                  openModal("login");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="border border-white text-white font-black uppercase tracking-widest text-[11px] px-5 py-3 rounded-xl hover:bg-white/10 transition-colors text-center w-full"
               >
                 LOGIN
-              </Link>
-              <Link
-                href="/signup"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-white text-black font-black uppercase tracking-widest text-[11px] px-5 py-3 rounded-xl hover:bg-gray-200 transition-colors text-center"
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  openModal("signup");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="bg-white text-black font-black uppercase tracking-widest text-[11px] px-5 py-3 rounded-xl hover:bg-gray-200 transition-colors text-center w-full"
               >
                 SIGNUP
-              </Link>
+              </button>
             </div>
           )}
         </div>

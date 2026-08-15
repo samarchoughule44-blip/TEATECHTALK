@@ -1,4 +1,7 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { useAuthModal } from "@/components/providers/auth-modal-provider";
 
 const SPONSORS = ["Nimbus Cloud", "Vertex Labs", "Northstar", "Codeforge", "Lumen"];
 
@@ -23,6 +26,8 @@ export function Sponsors() {
 }
 
 export function FinalCTA() {
+  const { openModal } = useAuthModal();
+
   return (
     <section className="mx-auto max-w-6xl px-6 pb-24">
       <div className="relative overflow-hidden rounded-3xl bg-[var(--color-ink)] px-8 py-16 text-center sm:px-16">
@@ -35,7 +40,7 @@ export function FinalCTA() {
           under two minutes.
         </p>
         <div className="mt-8">
-          <Button href="/login" variant="brand" size="lg">
+          <Button onClick={() => openModal("signup")} variant="brand" size="lg" className="cursor-pointer">
             Join Tea Tech Talks
           </Button>
         </div>

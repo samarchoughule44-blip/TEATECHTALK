@@ -6,6 +6,7 @@ import type { Activity } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useAuthModal } from "@/components/providers/auth-modal-provider";
 
 const ICONS = { Typing: Keyboard, Quiz: BrainCircuit };
 
@@ -17,6 +18,7 @@ const DIFFICULTY_COLOR: Record<Activity["difficulty"], string> = {
 
 export function ActivityCard({ activity, index }: { activity: Activity; index: number }) {
   const Icon = ICONS[activity.category];
+  const { openModal } = useAuthModal();
 
   return (
     <motion.div
@@ -58,7 +60,7 @@ export function ActivityCard({ activity, index }: { activity: Activity; index: n
             </span>
           </div>
 
-          <Button href="/login" variant="primary" size="md" className="mt-6 w-full">
+          <Button onClick={() => openModal("login")} variant="primary" size="md" className="mt-6 w-full cursor-pointer">
             Join activity
           </Button>
         </div>
