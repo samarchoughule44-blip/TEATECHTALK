@@ -81,12 +81,12 @@ export default async function ProfilePage() {
   const totalPoints = standalonePts + roomPts;
 
   const standaloneTestsCount = typingResults.length;
-  
+
   const allWpms = [
     ...typingResults.map(r => r.wpm ?? 0).filter(w => w > 0),
     ...roomActivities.map(r => r.wpm ?? 0).filter(w => w > 0)
   ];
-  
+
   const allAccuracies = [
     ...typingResults.map(r => r.accuracy ?? 0).filter(a => a > 0),
     ...roomActivities.map(r => r.accuracy ?? 0).filter(a => a > 0)
@@ -119,7 +119,7 @@ export default async function ProfilePage() {
       <div className="mx-auto max-w-5xl space-y-12">
 
         {/* ─── Top Grid ─────────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8">
 
           {/* User Profile Card */}
           <div className="bg-[var(--color-paper)] border-4 border-[var(--color-ink)]
@@ -218,7 +218,7 @@ export default async function ProfilePage() {
         </div>
 
         {/* ─── Activity Log ──────────────────────────────────────────────────── */}
-        <div>
+        <div className="relative z-10">
           <h2 className="text-4xl font-black uppercase tracking-tight mb-4 text-[var(--color-ink)]">Activity Log</h2>
           <div className="h-1 bg-[var(--color-ink)] w-full mb-8" />
 

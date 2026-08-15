@@ -9,7 +9,7 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="bg-black text-white">
+    <footer className="z-10 bg-black text-white">
       <div className="mx-auto max-w-7xl px-6 py-14 flex flex-col items-center">
         {/* Giant brand text */}
         <h2

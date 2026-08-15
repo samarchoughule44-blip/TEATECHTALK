@@ -31,7 +31,7 @@ export default function ActivitiesPage() {
       </div>
 
       {/* Cards */}
-      <div className="mx-auto max-w-4xl px-6 pb-16 grid md:grid-cols-2 gap-6">
+      <div className="relative z-10 mx-auto max-w-4xl px-6 pb-16 grid md:grid-cols-2 gap-6">
 
         {/* Speed Typing Test */}
         <div className="border-2 border-black rounded-xl overflow-hidden bg-white shadow-[4px_4px_0px_0px_var(--color-ink)] flex flex-col">

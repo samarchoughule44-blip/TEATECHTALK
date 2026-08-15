@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useAuthModal } from "@/components/providers/auth-modal-provider";
 
 export function Hero() {
+  const { openModal } = useAuthModal();
+
   return (
     <section className="relative overflow-hidden border-b border-[var(--color-line)]">
       <div className="pointer-events-none absolute inset-0">
@@ -50,7 +53,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.25 }}
           className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
-          <Button href="/login" variant="brand" size="lg" className="group">
+          <Button onClick={() => openModal("signup")} variant="brand" size="lg" className="group cursor-pointer">
             Join Tea Tech Talks
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Button>

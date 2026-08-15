@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { generateRoomCode } from '@/lib/room/utils'
-import type { RoomStatus } from '@/src/generated/prisma'
+export type RoomStatus = 'WAITING' | 'ACTIVE' | 'COMPLETED' | 'CLOSED'
 
 // ── Admin: Create a new room ────────────────────────────────────────
 export async function createRoom(prevState: unknown, formData: FormData) {

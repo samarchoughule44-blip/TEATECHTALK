@@ -52,12 +52,12 @@ export default async function LeaderboardPage() {
 
         {/* ── Heading ── */}
         <h1
-          className="text-[3.5rem] sm:text-[6.5rem] leading-none text-[var(--color-brand)] uppercase text-center mb-4 w-full"
+          className="z-10 text-[3.5rem] sm:text-[6.5rem] leading-none text-[var(--color-brand)] uppercase text-center mb-4 w-full"
           style={{ fontFamily: "var(--font-anton), Anton, Impact, sans-serif", letterSpacing: "0.02em" }}
         >
           LEADERBOARD
         </h1>
-        <p className="text-gray-500 text-sm font-medium mb-10 uppercase tracking-widest">
+        <p className="z-10 text-gray-500 text-sm font-medium mb-10 uppercase tracking-widest">
           Ranked by best room activity score
         </p>
 
@@ -97,19 +97,17 @@ export default async function LeaderboardPage() {
                       <div className={`font-bold uppercase tracking-wide mb-1 text-[var(--color-ink)] ${podiumIdx === 1 ? "text-xl" : "text-lg"}`}>
                         {user.name.split(" ")[0].toUpperCase()}
                       </div>
-                      <div className={`text-xs font-bold px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)] border-2 border-[var(--color-ink)] ${
-                        podiumIdx === 1
-                          ? "text-[var(--color-paper)] bg-[var(--color-ink)] tracking-wider text-sm"
-                          : "text-[var(--color-brand)] bg-[var(--color-brand-tint)]"
-                      }`}>
+                      <div className={`text-xs font-bold px-3 py-1 mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)] border-2 border-[var(--color-ink)] ${podiumIdx === 1
+                        ? "text-[var(--color-paper)] bg-[var(--color-ink)] tracking-wider text-sm"
+                        : "text-[var(--color-brand)] bg-[var(--color-brand-tint)]"
+                        }`}>
                         {user.bestScore.toFixed(1)} pts
                       </div>
                       <div
-                        className={`w-28 sm:w-36 ${PODIUM_HEIGHTS[podiumIdx]} flex items-center justify-center rounded-t-lg ${
-                          podiumIdx === 1
-                            ? "bg-[var(--color-brand)] border-4 border-[var(--color-ink)] text-[#fff]"
-                            : "bg-[var(--color-ink)] text-[var(--color-paper)]"
-                        } text-5xl font-display`}
+                        className={`w-28 sm:w-36 ${PODIUM_HEIGHTS[podiumIdx]} flex items-center justify-center rounded-t-lg ${podiumIdx === 1
+                          ? "bg-[var(--color-brand)] border-4 border-[var(--color-ink)] text-[#fff]"
+                          : "bg-[var(--color-ink)] text-[var(--color-paper)]"
+                          } text-5xl font-display`}
                         style={podiumIdx === 1 ? { WebkitTextStroke: "2px var(--color-ink)" } : {}}
                       >
                         {actualRank}
@@ -121,10 +119,10 @@ export default async function LeaderboardPage() {
             )}
 
             {/* Base bar */}
-            <div className="w-full max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-0" />
+            <div className="w-full max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-10" />
 
             {/* ── Full Table ── */}
-            <div className="w-full bg-[var(--color-paper)] border border-[var(--color-line)] rounded-[28px] overflow-hidden shadow-sm">
+            <div className="z-10 w-full bg-[var(--color-paper)] border border-[var(--color-line)] rounded-[28px] overflow-hidden shadow-sm">
 
               {/* Table header */}
               <div className="grid grid-cols-12 px-5 py-3 border-b border-[var(--color-line)] bg-[var(--color-fog)]">
@@ -138,19 +136,17 @@ export default async function LeaderboardPage() {
               {leaderboard.map((user, i) => (
                 <div
                   key={user.participantCode}
-                  className={`grid grid-cols-12 items-center px-5 py-4 border-b border-[var(--color-line)] last:border-b-0 transition-colors ${
-                    i < 3 ? "bg-[var(--color-brand-tint)]" : "hover:bg-[var(--color-fog)]"
-                  }`}
+                  className={`grid grid-cols-12 items-center px-5 py-4 border-b border-[var(--color-line)] last:border-b-0 transition-colors ${i < 3 ? "bg-[var(--color-brand-tint)]" : "hover:bg-[var(--color-fog)]"
+                    }`}
                 >
                   <span className="col-span-1 font-black text-base text-[var(--color-ink)]">
                     {i < 3 ? MEDALS[i] : `#${i + 1}`}
                   </span>
                   <div className="col-span-5 flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shrink-0 border-2 ${
-                      i < 3
-                        ? "bg-[var(--color-brand)] border-[var(--color-brand)] text-[#fff]"
-                        : "bg-[var(--color-mist)] border-[var(--color-line)] text-[var(--color-ink)]"
-                    }`}>
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shrink-0 border-2 ${i < 3
+                      ? "bg-[var(--color-brand)] border-[var(--color-brand)] text-[#fff]"
+                      : "bg-[var(--color-mist)] border-[var(--color-line)] text-[var(--color-ink)]"
+                      }`}>
                       {user.initials}
                     </div>
                     <div>
@@ -171,7 +167,7 @@ export default async function LeaderboardPage() {
               ))}
             </div>
 
-            <p className="text-xs text-gray-500 mt-6 text-center">
+            <p className="z-10 text-xs text-gray-500 mt-6 text-center">
               {leaderboard.length} participants · Scores update in real-time
             </p>
           </>

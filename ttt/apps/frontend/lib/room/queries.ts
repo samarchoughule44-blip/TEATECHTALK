@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { RoomStatus, ParticipantStatus } from '@/src/generated/prisma'
+import type { RoomStatus, ParticipantStatus } from '../../../backend/src/generated/prisma'
 
 
 export interface RoomWithParticipants {
