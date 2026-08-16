@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Search, ChevronDown, ChevronUp } from "lucide-react";
 import { leaderboardData } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ const TABS: { key: Timeframe; label: string }[] = [
 export function LeaderboardTable() {
   const [query, setQuery] = useState("");
   const [timeframe, setTimeframe] = useState<Timeframe>("overall");
+  const [visibleCount, setVisibleCount] = useState(10);
 
   const rows = useMemo(() => {
     // In production, each timeframe would hit a different API endpoint.
@@ -29,6 +30,12 @@ export function LeaderboardTable() {
       r.name.toLowerCase().includes(query.toLowerCase())
     );
   }, [query, timeframe]);
+
+  const displayedRows = useMemo(() => {
+    return rows.slice(0, visibleCount);
+  }, [rows, visibleCount]);
+
+  const hasMore = visibleCount < rows.length;
 
   return (
     <div className="mx-auto mt-16 max-w-4xl">
@@ -47,7 +54,10 @@ export function LeaderboardTable() {
           {TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setTimeframe(tab.key)}
+              onClick={() => {
+                setTimeframe(tab.key);
+                setVisibleCount(10);
+              }}
               className={cn(
                 "rounded-md px-3.5 py-1.5 text-[12.5px] font-medium transition-colors",
                 timeframe === tab.key
@@ -73,12 +83,12 @@ export function LeaderboardTable() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((entry, i) => (
+            {displayedRows.map((entry, i) => (
               <motion.tr
                 key={entry.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: i * 0.03 }}
+                transition={{ duration: 0.3, delay: (i % 10) * 0.03 }}
                 className="border-b border-[var(--color-line)] text-[13.5px] last:border-0 hover:bg-[var(--color-fog)] transition-colors"
               >
                 <td className="px-5 py-3.5 font-semibold text-[var(--color-muted)]">
@@ -118,6 +128,30 @@ export function LeaderboardTable() {
           </tbody>
         </table>
       </div>
+
+      {rows.length > 10 && (
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          {hasMore && (
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 10)}
+              className="flex items-center gap-2 rounded-xl border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-6 py-2.5 text-sm font-bold text-[var(--color-paper)] shadow-[3px_3px_0px_0px_var(--color-brand)] transition-all hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_0px_var(--color-brand)] cursor-pointer"
+            >
+              <span>See More ({rows.length - visibleCount} remaining)</span>
+              <ChevronDown className="h-4 w-4" />
+            </button>
+          )}
+
+          {visibleCount > 10 && (
+            <button
+              onClick={() => setVisibleCount(10)}
+              className="flex items-center gap-2 rounded-xl border-2 border-[var(--color-ink)] bg-white px-6 py-2.5 text-sm font-bold text-[var(--color-ink)] shadow-[3px_3px_0px_0px_var(--color-ink)] transition-all hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_0px_var(--color-ink)] cursor-pointer"
+            >
+              <span>Shrink</span>
+              <ChevronUp className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

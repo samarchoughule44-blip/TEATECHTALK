@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LeaderboardTableClient } from "@/components/leaderboard/leaderboard-table-client";
 
 export const metadata = {
   title: "Leaderboard | Tea Tech Talks",
@@ -122,54 +123,7 @@ export default async function LeaderboardPage() {
             <div className="w-full max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-10" />
 
             {/* ── Full Table ── */}
-            <div className="z-10 w-full bg-[var(--color-paper)] border border-[var(--color-line)] rounded-[28px] overflow-hidden shadow-sm">
-
-              {/* Table header */}
-              <div className="grid grid-cols-12 px-5 py-3 border-b border-[var(--color-line)] bg-[var(--color-fog)]">
-                <span className="col-span-1 text-[10px] font-black uppercase tracking-widest text-gray-500">Rank</span>
-                <span className="col-span-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Participant</span>
-                <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">Typing</span>
-                <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">Quiz</span>
-                <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-500 text-right">Best</span>
-              </div>
-
-              {leaderboard.map((user, i) => (
-                <div
-                  key={user.participantCode}
-                  className={`grid grid-cols-12 items-center px-5 py-4 border-b border-[var(--color-line)] last:border-b-0 transition-colors ${i < 3 ? "bg-[var(--color-brand-tint)]" : "hover:bg-[var(--color-fog)]"
-                    }`}
-                >
-                  <span className="col-span-1 font-black text-base text-[var(--color-ink)]">
-                    {i < 3 ? MEDALS[i] : `#${i + 1}`}
-                  </span>
-                  <div className="col-span-5 flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shrink-0 border-2 ${i < 3
-                      ? "bg-[var(--color-brand)] border-[var(--color-brand)] text-[#fff]"
-                      : "bg-[var(--color-mist)] border-[var(--color-line)] text-[var(--color-ink)]"
-                      }`}>
-                      {user.initials}
-                    </div>
-                    <div>
-                      <span className="font-bold text-sm text-[var(--color-ink)] block">{user.name}</span>
-                      <span className="text-[11px] text-gray-400 font-mono">{user.participantCode}</span>
-                    </div>
-                  </div>
-                  <span className="col-span-2 text-center font-semibold text-sm text-[var(--color-ink)]">
-                    {user.bestTypingScore.toFixed(1)}
-                  </span>
-                  <span className="col-span-2 text-center font-semibold text-sm text-[var(--color-ink)]">
-                    {user.bestQuizScore.toFixed(1)}
-                  </span>
-                  <span className="col-span-2 text-right font-black text-sm text-[var(--color-brand)]">
-                    {user.bestScore.toFixed(1)}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <p className="z-10 text-xs text-gray-500 mt-6 text-center">
-              {leaderboard.length} participants · Scores update in real-time
-            </p>
+            <LeaderboardTableClient leaderboard={leaderboard} />
           </>
         )}
       </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 type RoomStatus = 'WAITING' | 'ACTIVE' | 'COMPLETED' | 'CLOSED'
 
@@ -35,6 +36,7 @@ const MEDALS = ['🥇', '🥈', '🥉']
 
 export function RoomLeaderboardClient({ roomCode, roomId, roomStatus, initialResults }: Props) {
   const [results, setResults] = useState<LeaderboardEntry[]>(initialResults)
+  const [visibleCount, setVisibleCount] = useState(10)
 
   // Subscribe to new final results
   useEffect(() => {
@@ -61,7 +63,8 @@ export function RoomLeaderboardClient({ roomCode, roomId, roomStatus, initialRes
   }, [roomId, roomCode])
 
   const top3 = results.slice(0, 3)
-  const rest = results.slice(3)
+  const displayedResults = results.slice(0, visibleCount)
+  const hasMore = visibleCount < results.length
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -144,7 +147,7 @@ export function RoomLeaderboardClient({ roomCode, roomId, roomStatus, initialRes
                 <div className="col-span-2 text-[10px] font-bold uppercase tracking-widest text-gray-600 text-right">Score</div>
               </div>
 
-              {results.map((r, i) => (
+              {displayedResults.map((r, i) => (
                 <div
                   key={r.id}
                   className={`grid grid-cols-12 gap-2 px-5 py-4 border-b border-white/5 last:border-0 items-center ${
@@ -179,11 +182,36 @@ export function RoomLeaderboardClient({ roomCode, roomId, roomStatus, initialRes
                 </div>
               ))}
             </div>
+
+            {/* See More / Shrink Buttons */}
+            {results.length > 10 && (
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                {hasMore && (
+                  <button
+                    onClick={() => setVisibleCount(prev => prev + 10)}
+                    className="flex items-center gap-2 bg-[#D90429] text-white font-bold text-sm py-2.5 px-6 rounded-xl hover:bg-[#b00320] transition-colors cursor-pointer"
+                  >
+                    <span>See More ({results.length - visibleCount} remaining)</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                )}
+
+                {visibleCount > 10 && (
+                  <button
+                    onClick={() => setVisibleCount(10)}
+                    className="flex items-center gap-2 bg-white/10 text-white font-bold text-sm py-2.5 px-6 rounded-xl hover:bg-white/20 border border-white/10 transition-colors cursor-pointer"
+                  >
+                    <span>Shrink</span>
+                    <ChevronUp className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            )}
           </>
         )}
 
         <p className="text-center text-xs text-gray-700 mt-6">
-          Updates automatically as participants complete the activity
+          Showing {displayedResults.length} of {results.length} participants · Updates automatically
         </p>
       </div>
     </div>
