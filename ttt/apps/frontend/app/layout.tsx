@@ -52,7 +52,7 @@ export default async function RootLayout({
               {!isAppRoute && <Navbar isLoggedIn={!!user} />}
               <main className="flex-1">{children}</main>
               {!isAppRoute && <Footer />}
-              <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+              <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
                 <PixelTrail
                   gridSize={60}
                   trailSize={0.1}

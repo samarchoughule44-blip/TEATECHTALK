@@ -248,7 +248,7 @@ export default function TypingTestPage() {
 
       <div className="mx-auto max-w-4xl px-4 pb-20">
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="relative z-10 grid grid-cols-4 gap-4 mb-6">
           {[
             {
               label: "TIME REMAINING",
@@ -289,7 +289,7 @@ export default function TypingTestPage() {
         </div>
 
         {/* Typing Area */}
-        <div className="relative border-2 border-black bg-white rounded-xl p-6 shadow-[4px_4px_0px_0px_var(--color-ink)] mb-4">
+        <div className="relative z-10 border-2 border-black bg-white rounded-xl p-6 shadow-[4px_4px_0px_0px_var(--color-ink)] mb-4">
           {/* PRO badge */}
           <span className="absolute top-0 right-4 -translate-y-1/2 bg-[var(--color-brand)] text-[#fff] text-[10px] font-black px-4 py-1 uppercase tracking-widest rounded-full">
             LIVE SESSION
@@ -336,7 +336,7 @@ export default function TypingTestPage() {
         </div>
 
         {/* Controls */}
-        <div className="flex gap-3">
+        <div className="relative z-10 flex gap-3">
           <button
             id="start-test-btn"
             onClick={() => {
@@ -379,14 +379,14 @@ export default function TypingTestPage() {
               onClick={() => setResult(null)}
               className="absolute top-4 right-4 border-2 border-black rounded-full p-1 hover:bg-gray-100 transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="text-black w-4 h-4" />
             </button>
 
             <div className="text-center mb-6">
               <div className="text-5xl mb-2">
                 {result.wpm >= 70 ? "🏆" : result.wpm >= 40 ? "⚡" : "💪"}
               </div>
-              <h2 className="text-3xl font-black uppercase tracking-widest">
+              <h2 className="text-3xl text-black font-black uppercase tracking-widest">
                 {result.wpm >= 70 ? "IMPRESSIVE!" : result.wpm >= 40 ? "WELL DONE!" : "KEEP GOING!"}
               </h2>
               <p className="text-gray-500 text-sm font-medium mt-1">

@@ -78,7 +78,7 @@ export default async function LeaderboardPage() {
           <>
             {/* ── Podium ── */}
             {top3.length > 0 && (
-              <div className="flex items-end justify-center gap-6 sm:gap-8 mb-0 w-full relative z-10">
+              <div className="flex items-end justify-center gap-6 ml-2 sm:gap-8 mb-0 w-full relative z-10">
                 {podiumOrder.map((user, podiumIdx) => {
                   const actualRank = podiumIdx === 0 ? 2 : podiumIdx === 1 ? 1 : 3;
                   return (
@@ -120,7 +120,7 @@ export default async function LeaderboardPage() {
             )}
 
             {/* Base bar */}
-            <div className="w-full max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-10" />
+            <div className="w-[700px] max-w-lg sm:max-w-2xl h-[8px] bg-[var(--color-ink)] mb-12 relative z-10" />
 
             {/* ── Full Table ── */}
             <LeaderboardTableClient leaderboard={leaderboard} />
