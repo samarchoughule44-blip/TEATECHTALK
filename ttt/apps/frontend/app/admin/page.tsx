@@ -12,11 +12,14 @@ export default async function AdminPage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Fetch admin user info
-  const userRes = await fetch(
-    `${BACKEND_URL}/api/admin/user?email=${encodeURIComponent(user!.email ?? '')}`,
-    { cache: 'no-store' }
-  )
-  const dbUser = userRes.ok ? await userRes.json() : null
+  let dbUser = null
+  if (user && user.email) {
+    const userRes = await fetch(
+      `${BACKEND_URL}/api/admin/user?email=${encodeURIComponent(user.email)}`,
+      { cache: 'no-store' }
+    )
+    dbUser = userRes.ok ? await userRes.json() : null
+  }
 
   // Fetch rooms
   const roomsRes = await fetch(`${BACKEND_URL}/api/admin/rooms`, { cache: 'no-store' })

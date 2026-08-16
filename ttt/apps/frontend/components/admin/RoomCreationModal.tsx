@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition, useState, useActionState } from 'react'
+import { useActionState } from 'react'
 
 interface Props {
   onClose: () => void
@@ -11,114 +11,142 @@ interface Props {
 export function RoomCreationModal({ onClose, onCreated, createAction }: Props) {
   const [state, formAction, isPending] = useActionState(createAction, null)
 
-  // When room is created successfully, notify parent
-  if (state?.success && state.roomCode) {
-    // Show success state before closing
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+      />
 
-      {/* Modal */}
-      <div className="relative z-10 w-full max-w-md bg-[#141414] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-black text-white">Create New Room</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Configure and generate a new activity room</p>
-          </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-        </div>
+      {/* Modal Card */}
+      <div className="relative z-10 w-full max-w-lg border-4 border-[var(--color-ink)] bg-[var(--color-paper)] p-8 shadow-[6px_6px_0px_0px_var(--color-brand)] overflow-hidden">
+        {/* Decorative corner accent circle */}
+        <div className="absolute top-0 right-0 w-36 h-36 rounded-full bg-[var(--color-brand-tint)] -mr-12 -mt-12 pointer-events-none z-0" />
 
-        {state?.success ? (
-          <div className="p-8 text-center">
-            <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-            </div>
-            <h3 className="text-xl font-black text-white mb-2">Room Created!</h3>
-            <p className="text-gray-400 text-sm mb-4">Share this Room ID with participants:</p>
-            <div className="bg-[#D90429]/10 border border-[#D90429]/30 rounded-xl p-4 mb-6">
-              <p className="font-mono font-black text-3xl text-[#D90429] tracking-widest">{state.roomCode}</p>
+        <div className="relative z-10">
+          {/* Top header row */}
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm mb-3">
+                <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse" />
+                ADMIN CONTROL
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl uppercase tracking-wide text-[var(--color-brand)] leading-none">
+                CREATE NEW ROOM
+              </h2>
             </div>
             <button
-              onClick={() => {
-                onCreated({ roomCode: state.roomCode } as any)
-              }}
-              className="w-full bg-[#D90429] hover:bg-[#b00322] text-white font-bold py-3 rounded-lg transition-colors"
+              onClick={onClose}
+              className="border-2 border-[var(--color-ink)] bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] transition-colors p-2 shadow-[2px_2px_0px_0px_var(--color-ink)] shrink-0"
+              aria-label="Close modal"
             >
-              Go to Dashboard
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
-        ) : (
-          <form action={formAction} className="p-6 space-y-5">
-            {state?.error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3">
-                {state.error}
+
+          {state?.success ? (
+            <div className="py-4 text-center">
+              <div className="w-16 h-16 bg-[var(--color-brand-tint)] border-4 border-[var(--color-ink)] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[3px_3px_0px_0px_var(--color-ink)]">
+                <span className="text-3xl text-[var(--color-brand)] font-black">✓</span>
               </div>
-            )}
-
-            {/* Auto-generated room code info */}
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-              <p className="text-xs text-gray-500 mb-1 font-medium">Room ID</p>
-              <p className="text-sm text-gray-300">A unique Room ID (e.g. <span className="font-mono font-bold text-white">TECH2026</span>) will be generated automatically.</p>
-            </div>
-
-            {/* Typing duration */}
-            <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                Typing Test Duration (seconds)
-              </label>
-              <select
-                name="typingDuration"
-                defaultValue="60"
-                className="w-full bg-white/5 border border-white/10 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#D90429]/50 transition-colors"
-              >
-                <option value="30" className="bg-[#141414]">30 seconds</option>
-                <option value="60" className="bg-[#141414]">60 seconds (recommended)</option>
-                <option value="90" className="bg-[#141414]">90 seconds</option>
-                <option value="120" className="bg-[#141414]">2 minutes</option>
-              </select>
-            </div>
-
-            {/* Quiz duration */}
-            <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                Quiz Duration (minutes)
-              </label>
-              <select
-                name="quizDuration"
-                defaultValue="900"
-                className="w-full bg-white/5 border border-white/10 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#D90429]/50 transition-colors"
-              >
-                <option value="300" className="bg-[#141414]">5 minutes</option>
-                <option value="600" className="bg-[#141414]">10 minutes</option>
-                <option value="900" className="bg-[#141414]">15 minutes (recommended)</option>
-                <option value="1200" className="bg-[#141414]">20 minutes</option>
-              </select>
-            </div>
-
-            <div className="pt-2 flex gap-3">
+              <h3 className="font-display text-2xl uppercase tracking-wide mb-2 text-[var(--color-ink)]">
+                ROOM CREATED!
+              </h3>
+              <p className="text-sm font-medium text-gray-400 mb-6">
+                Share this unique Room ID with participants:
+              </p>
+              <div className="border-4 border-[var(--color-ink)] bg-[var(--color-ink)] p-4 mb-6 shadow-[4px_4px_0px_0px_var(--color-brand)]">
+                <p className="font-mono font-black text-4xl text-[var(--color-paper)] tracking-widest">
+                  {state.roomCode}
+                </p>
+              </div>
               <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 font-bold py-3 rounded-lg transition-colors text-sm"
+                onClick={() => {
+                  onCreated({ roomCode: state.roomCode } as any)
+                }}
+                className="w-full border-2 border-[var(--color-ink)] bg-[var(--color-brand)] text-white font-bold uppercase tracking-widest py-3 px-6 shadow-[3px_3px_0px_0px_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all text-sm"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isPending}
-                className="flex-1 bg-[#D90429] hover:bg-[#b00322] disabled:opacity-50 text-white font-bold py-3 rounded-lg transition-colors text-sm"
-              >
-                {isPending ? 'Creating...' : 'Create Room'}
+                GO TO DASHBOARD →
               </button>
             </div>
-          </form>
-        )}
+          ) : (
+            <form action={formAction} className="space-y-6">
+              {state?.error && (
+                <div className="border-2 border-red-600 bg-red-500/10 text-red-400 text-xs font-bold uppercase tracking-wider px-4 py-3 shadow-[2px_2px_0px_0px_red]">
+                  {state.error}
+                </div>
+              )}
+
+              {/* Room ID info box */}
+              <div className="border-2 border-[var(--color-ink)] bg-[var(--color-paper)] p-4 shadow-[3px_3px_0px_0px_var(--color-ink)]">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[var(--color-brand)] text-sm">🔑</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-[var(--color-ink)]">
+                    ROOM IDENTIFIER
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400 font-medium ml-6">
+                  A unique Room ID (e.g. <strong className="text-[var(--color-ink)] font-mono">TECH2026</strong>) will be generated automatically.
+                </p>
+              </div>
+
+              {/* Typing duration */}
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--color-ink)] mb-2">
+                  ⚡ Typing Test Duration
+                </label>
+                <select
+                  name="typingDuration"
+                  defaultValue="60"
+                  className="w-full border-2 border-[var(--color-ink)] bg-[var(--color-paper)] text-[var(--color-ink)] font-bold text-sm px-4 py-3 focus:outline-none shadow-[3px_3px_0px_0px_var(--color-ink)] transition-all cursor-pointer"
+                >
+                  <option value="30" className="bg-[#141414] text-white">30 seconds</option>
+                  <option value="60" className="bg-[#141414] text-white">60 seconds (recommended)</option>
+                  <option value="90" className="bg-[#141414] text-white">90 seconds</option>
+                  <option value="120" className="bg-[#141414] text-white">2 minutes</option>
+                </select>
+              </div>
+
+              {/* Quiz duration */}
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--color-ink)] mb-2">
+                  🧠 Quiz Duration
+                </label>
+                <select
+                  name="quizDuration"
+                  defaultValue="900"
+                  className="w-full border-2 border-[var(--color-ink)] bg-[var(--color-paper)] text-[var(--color-ink)] font-bold text-sm px-4 py-3 focus:outline-none shadow-[3px_3px_0px_0px_var(--color-ink)] transition-all cursor-pointer"
+                >
+                  <option value="300" className="bg-[#141414] text-white">5 minutes</option>
+                  <option value="600" className="bg-[#141414] text-white">10 minutes</option>
+                  <option value="900" className="bg-[#141414] text-white">15 minutes (recommended)</option>
+                  <option value="1200" className="bg-[#141414] text-white">20 minutes</option>
+                </select>
+              </div>
+
+              {/* Buttons */}
+              <div className="pt-2 flex gap-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 border-2 border-[var(--color-ink)] bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] font-bold uppercase tracking-widest py-3 text-xs shadow-[3px_3px_0px_0px_var(--color-ink)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
+                >
+                  CANCEL
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="flex-1 border-2 border-[var(--color-ink)] bg-[var(--color-brand)] hover:bg-[#b00322] disabled:opacity-50 text-white font-bold uppercase tracking-widest py-3 text-xs shadow-[3px_3px_0px_0px_var(--color-ink)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
+                >
+                  {isPending ? 'CREATING...' : 'CREATE ROOM →'}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   )

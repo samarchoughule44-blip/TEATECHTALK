@@ -44,20 +44,20 @@ interface Props {
 }
 
 const STATUS_CONFIG: Record<ParticipantStatus, { label: string; color: string; dot: string }> = {
-  JOINED:       { label: 'Waiting',      color: 'bg-blue-500/10 text-blue-400 border-blue-500/30',   dot: 'bg-blue-400' },
-  TYPING:       { label: 'Typing Test',  color: 'bg-amber-500/10 text-amber-400 border-amber-500/30', dot: 'bg-amber-400' },
-  TYPING_DONE:  { label: 'Typing Done',  color: 'bg-orange-500/10 text-orange-400 border-orange-500/30', dot: 'bg-orange-400' },
-  QUIZ:         { label: 'Quiz',         color: 'bg-purple-500/10 text-purple-400 border-purple-500/30', dot: 'bg-purple-400' },
-  COMPLETED:    { label: 'Completed',    color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30', dot: 'bg-emerald-400' },
-  LEFT:         { label: 'Left',         color: 'bg-gray-500/10 text-gray-400 border-gray-500/30',   dot: 'bg-gray-400' },
-  DISCONNECTED: { label: 'Disconnected', color: 'bg-red-500/10 text-red-400 border-red-500/30',     dot: 'bg-red-400' },
+  JOINED: { label: 'Waiting', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30', dot: 'bg-blue-400' },
+  TYPING: { label: 'Typing Test', color: 'bg-amber-500/10 text-amber-400 border-amber-500/30', dot: 'bg-amber-400' },
+  TYPING_DONE: { label: 'Typing Done', color: 'bg-orange-500/10 text-orange-400 border-orange-500/30', dot: 'bg-orange-400' },
+  QUIZ: { label: 'Quiz', color: 'bg-purple-500/10 text-purple-400 border-purple-500/30', dot: 'bg-purple-400' },
+  COMPLETED: { label: 'Completed', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30', dot: 'bg-emerald-400' },
+  LEFT: { label: 'Left', color: 'bg-gray-500/10 text-gray-400 border-gray-500/30', dot: 'bg-gray-400' },
+  DISCONNECTED: { label: 'Disconnected', color: 'bg-red-500/10 text-red-400 border-red-500/30', dot: 'bg-red-400' },
 }
 
 const ROOM_STATUS_CONFIG: Record<RoomStatus, { label: string; color: string }> = {
-  WAITING:   { label: 'Waiting',   color: 'text-blue-400' },
-  ACTIVE:    { label: 'Active',    color: 'text-emerald-400' },
+  WAITING: { label: 'Waiting', color: 'text-blue-400' },
+  ACTIVE: { label: 'Active', color: 'text-emerald-400' },
   COMPLETED: { label: 'Completed', color: 'text-gray-400' },
-  CLOSED:    { label: 'Closed',    color: 'text-red-400' },
+  CLOSED: { label: 'Closed', color: 'text-red-400' },
 }
 
 export function AdminDashboardClient({ adminName, initialRooms }: Props) {
@@ -227,11 +227,10 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
               <button
                 key={r.id}
                 onClick={() => setSelectedRoom(r)}
-                className={`w-full text-left p-3 rounded-lg border transition-all duration-150 ${
-                  selectedRoom?.id === r.id
-                    ? 'bg-white/10 border-white/20'
-                    : 'bg-transparent border-transparent hover:bg-white/5'
-                }`}
+                className={`w-full text-left p-3 rounded-lg border transition-all duration-150 ${selectedRoom?.id === r.id
+                  ? 'bg-white/10 border-white/20'
+                  : 'bg-transparent border-transparent hover:bg-white/5'
+                  }`}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-mono font-bold text-sm text-white">{r.roomCode}</span>
@@ -265,11 +264,10 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
             <div className="p-6 space-y-6">
               {/* Action message */}
               {actionMsg && (
-                <div className={`rounded-lg px-4 py-3 text-sm font-medium border ${
-                  actionMsg.type === 'success'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-red-500/10 border-red-500/30 text-red-400'
-                }`}>
+                <div className={`rounded-lg px-4 py-3 text-sm font-medium border ${actionMsg.type === 'success'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  : 'bg-red-500/10 border-red-500/30 text-red-400'
+                  }`}>
                   {actionMsg.text}
                 </div>
               )}
@@ -279,19 +277,18 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <h2 className="text-3xl font-black font-mono tracking-wider text-white">{room.roomCode}</h2>
-                    <span className={`text-xs font-bold px-2 py-1 rounded-full border ${
-                      room.status === 'ACTIVE' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' :
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full border ${room.status === 'ACTIVE' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' :
                       room.status === 'WAITING' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' :
-                      room.status === 'COMPLETED' ? 'bg-gray-500/10 border-gray-500/30 text-gray-400' :
-                      'bg-red-500/10 border-red-500/30 text-red-400'
-                    }`}>
+                        room.status === 'COMPLETED' ? 'bg-gray-500/10 border-gray-500/30 text-gray-400' :
+                          'bg-red-500/10 border-red-500/30 text-red-400'
+                      }`}>
                       {room.status === 'ACTIVE' && <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" />}
                       {ROOM_STATUS_CONFIG[room.status].label}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500">
                     Typing: {room.typingDuration}s &middot; Quiz: {Math.floor(room.quizDuration / 60)}min
-                    {room.startedAt && <> &middot; Started {new Date(room.startedAt).toLocaleTimeString()}</>}
+                    {room.startedAt && isMounted && <> &middot; Started {new Date(room.startedAt).toLocaleTimeString()}</>}
                   </p>
                 </div>
 
@@ -312,11 +309,10 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
                     <button
                       onClick={handleToggleJoining}
                       disabled={isPending}
-                      className={`font-bold text-sm px-4 py-2 rounded-lg transition-all duration-200 border ${
-                        room.allowJoining
-                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20'
-                          : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20'
-                      }`}
+                      className={`font-bold text-sm px-4 py-2 rounded-lg transition-all duration-200 border ${room.allowJoining
+                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20'
+                        : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20'
+                        }`}
                     >
                       {room.allowJoining ? '🔒 Lock Joining' : '🔓 Allow Joining'}
                     </button>
@@ -367,7 +363,7 @@ export function AdminDashboardClient({ adminName, initialRooms }: Props) {
                 <div className="text-right">
                   <p className="text-xs text-gray-500 mb-1">Join URL</p>
                   <code className="text-xs text-gray-400 bg-black/30 px-2 py-1 rounded">
-                    {typeof window !== 'undefined' ? window.location.origin : ''}/join
+                    {isMounted ? `${window.location.origin}/join` : '/join'}
                   </code>
                 </div>
               </div>
